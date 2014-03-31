@@ -14,9 +14,12 @@
   <link rel="stylesheet" href="codemirror/lib/codemirror.css">
   <link rel="stylesheet" href="default.css">
   <style>
+    
     .CodeMirror pre{
-      line-height: 14px;
+      line-height: 24px;
+      font-size: 14px;
     }
+
     #in, .CodeMirror{
       position: fixed;
       top: 0;
@@ -42,12 +45,13 @@
       padding: 10px;
       padding-left: 20px;
       color: #444;
-      font-family:Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif;
+      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+      font-weight: 300;
       font-size: 16px;
-      line-height: 1.5em
+      line-height: 2em
     }
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 768px) {
       #in {
         display: none;
       }
@@ -109,6 +113,28 @@
     table { border-collapse: collapse; border-spacing: 0; }
     td, th { vertical-align: top; padding: 4px 10px; border: 1px solid #bbb; }
     tr:nth-child(even) td, tr:nth-child(even) th { background: #eee; }
+
+    #copy {
+      position: absolute;
+      right: 20px;
+      top: 0px;
+      cursor: pointer;
+    }
+    #editorCode {
+      position: absolute;
+      right: 20px;
+      top: 40px;
+      height: 205px;
+      padding: 5px;
+      width: 305px;
+      background: #EEE;
+    }
+    #sourceHTML {
+      width: 300px;
+      height: 200px;
+      border : none;
+      outline: none;
+    }
   </style>
 </head>
 <body>
@@ -152,6 +178,8 @@ the inspiration to this, and some handy implementation hints, came.
 </textarea></form></div>
   <div id="out"></div>
 
+<div id="copy"><img src="./images/copy.png"></div>
+<div id="editorCode"><textarea id="sourceHTML" readonly="readonly"></textarea></div>
   <script>
     var URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
     navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob || navigator.mozSaveBlob || navigator.webkitSaveBlob;
@@ -195,6 +223,8 @@ the inspiration to this, and some handy implementation hints, came.
       theme: 'default',
       onChange: update
     });
+
+
 
     document.addEventListener('drop', function(e){
       e.preventDefault();
@@ -261,8 +291,23 @@ the inspiration to this, and some handy implementation hints, came.
       editor.focus();
     }
 
-    var GoSquared = { acct: 'GSN-265185-D' };
+document.getElementById("copy").onclick = function ()
+{
+
+  document.getElementById('editorCode').hidden = !document.getElementById('editorCode').hidden;
+
+  var val = editor.getValue();
+
+  val = val.replace(/<equation>((.*?\n)*?.*?)<\/equation>/ig, function(a, b){
+  return '<img src="http://latex.codecogs.com/png.latex?' + encodeURIComponent(b) + '" />';
+  });
+  document.getElementById('sourceHTML').value = marked(val);
+      
+
+}
+    
+    document.getElementById('editorCode').hidden = true;
   </script>
-  <script src="//d1l6p2sc9645hc.cloudfront.net/tracker.js" async></script>
+  
 </body>
 </html>
