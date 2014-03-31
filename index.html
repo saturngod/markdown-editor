@@ -4,11 +4,20 @@
   <title>Markdown Editor</title>
   <script src="marked.js"></script>
   <script src="highlight.pack.js"></script>
-  <script src="codemirror/lib/codemirror.js"></script>
-  <script src="codemirror/xml/xml.js"></script>
-  <script src="codemirror/markdown/markdown.js"></script>
-  <script src="codemirror/gfm/gfm.js"></script>
-  <script src="codemirror/javascript/javascript.js"></script>
+
+
+
+<script src="codemirror/lib/codemirror.js"></script>
+<script src="codemirror/addon/mode/overlay.js"></script>
+<script src="codemirror/mode/xml/xml.js"></script>
+<script src="codemirror/mode/markdown/markdown.js"></script>
+<script src="codemirror/mode/gfm/gfm.js"></script>
+<script src="codemirror/mode/javascript/javascript.js"></script>
+<script src="codemirror/mode/css/css.js"></script>
+<script src="codemirror/mode/php/php.js"></script>
+<script src="codemirror/mode/htmlmixed/htmlmixed.js"></script>
+<script src="codemirror/mode/clike/clike.js"></script>
+
   <script src="rawinflate.js"></script>
   <script src="rawdeflate.js"></script>
   <link rel="stylesheet" href="codemirror/lib/codemirror.css">
@@ -29,6 +38,7 @@
       overflow: auto;
       font-size: 12px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      height: 100%;
     }
     .CodeMirror-scroll {
       height: 100%;
@@ -188,7 +198,8 @@ the inspiration to this, and some handy implementation hints, came.
     // Because highlight.js is a bit awkward at times
     var languageOverrides = {
       js: 'javascript',
-      html: 'xml'
+      html: 'xml',
+      php: 'php'
     }
 
     marked.setOptions({
@@ -216,16 +227,21 @@ the inspiration to this, and some handy implementation hints, came.
     }
 
     var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
-      mode: 'gfm',
+      mode : "gfm",
       lineNumbers: true,
       matchBrackets: true,
       lineWrapping: true,
       theme: 'default',
-      onChange: update
     });
 
+    editor.on("change", function() {
+        updatePreview();
+      });
 
-
+    function updatePreview()
+    {
+      update(editor);
+    }
     document.addEventListener('drop', function(e){
       e.preventDefault();
       e.stopPropagation();
