@@ -121,6 +121,10 @@
     if(supports_html5_storage())
     {
       markdownData = localStorage.getItem("markdown");
+      if(markdownData === null)
+      {
+        markdownData = ""; //item not exist , put empty string
+      }
     }
     if(window.location.hash){
       var h = window.location.hash.replace(/^#/, '');
