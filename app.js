@@ -103,9 +103,25 @@
     var hashto;
 
     function updateHash(){
-      window.location.hash = btoa(RawDeflate.deflate(unescape(encodeURIComponent(editor.getValue()))))
+      window.location.hash = btoa(RawDeflate.deflate(unescape(encodeURIComponent(editor.getValue()))));
+
+      updateStorage();
+
     }
 
+    function updateStorage()
+    {
+      if(supports_html5_storage())
+      {
+        localStorage.setItem("markdown",btoa(RawDeflate.deflate(unescape(encodeURIComponent(editor.getValue())))));
+      }
+    }
+
+    var markdownData = "";
+    if(supports_html5_storage())
+    {
+      markdownData = localStorage.getItem("markdown");
+    }
     if(window.location.hash){
       var h = window.location.hash.replace(/^#/, '');
       if(h.slice(0,5) == 'view:'){
@@ -116,7 +132,15 @@
         update(editor);
         editor.focus();
       }
-    }else{
+    }
+    else if(supports_html5_storage() && markdownData!="")
+    {
+        //show saved data
+        editor.setValue(decodeURIComponent(escape(RawDeflate.inflate(atob(markdownData)))));
+        update(editor);
+        editor.focus();
+    }
+    else{
       update(editor);
       editor.focus();
     }
@@ -142,3 +166,13 @@ document.getElementById("copy").onclick = function ()
 }
     
 document.getElementById('editorCode').hidden = true;
+
+
+function supports_html5_storage() {
+  try {
+    return 'localStorage' in window && window['localStorage'] !== null;
+  } catch (e) {
+    return false;
+  }
+}
+
