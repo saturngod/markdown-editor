@@ -111,14 +111,30 @@
 
     function updateStorage()
     {
-      if(supports_html5_storage())
+      if(is_chrome_stroage())
+      {
+        chrome.storage.sync.set({'markdown': btoa(RawDeflate.deflate(unescape(encodeURIComponent(editor.getValue()))))}, function() {
+        });
+      }
+      else if(supports_html5_storage())
       {
         localStorage.setItem("markdown",btoa(RawDeflate.deflate(unescape(encodeURIComponent(editor.getValue())))));
       }
     }
 
     var markdownData = "";
-    if(supports_html5_storage())
+    if(is_chrome_stroage())
+    {
+      chrome.storage.sync.get('markdown',function(value){
+        markdownData = value.markdown;
+         if(markdownData!=""){
+          editor.setValue(decodeURIComponent(escape(RawDeflate.inflate(atob(markdownData)))));
+          update(editor);
+          editor.focus();
+         }
+      });
+    }
+    else if(supports_html5_storage())
     {
       markdownData = localStorage.getItem("markdown");
       if(markdownData === null)
@@ -126,6 +142,7 @@
         markdownData = ""; //item not exist , put empty string
       }
     }
+
     if(window.location.hash){
       var h = window.location.hash.replace(/^#/, '');
       if(h.slice(0,5) == 'view:'){
@@ -137,7 +154,7 @@
         editor.focus();
       }
     }
-    else if(supports_html5_storage() && markdownData!="")
+    else if(markdownData!="")
     {
         //show saved data
         editor.setValue(decodeURIComponent(escape(RawDeflate.inflate(atob(markdownData)))));
@@ -178,5 +195,10 @@ function supports_html5_storage() {
   } catch (e) {
     return false;
   }
+}
+
+function is_chrome_stroage()
+{
+  return !(typeof chrome.storage === 'undefined')
 }
 

@@ -1,0 +1,14 @@
+{
+  "name": "Markdown Editor",
+  "description": "Markdown Editor",
+  "version": "1.0",
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "permissions": [
+          "storage"
+        ],
+  "icons": { "128": "icon-128.png" }
+}
