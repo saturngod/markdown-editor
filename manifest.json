@@ -1,6 +1,6 @@
 {
-  "name": "Markdown Editor",
-  "description": "Markdown Editor",
+  "name": "SG Markdown",
+  "description": "Markdown Editor that support Myanmar Unicode. It allow to download markdown file and HTML file.",
   "version": "1.0",
   "app": {
     "background": {
