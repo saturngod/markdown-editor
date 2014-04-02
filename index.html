@@ -24,6 +24,9 @@
   <link rel="stylesheet" href="default.css">
   <style>
     
+    body {
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    }
     .CodeMirror pre{
       line-height: 24px;
       font-size: 14px;
@@ -134,7 +137,7 @@
       position: absolute;
       right: 20px;
       top: 40px;
-      height: 205px;
+      height: 240px;
       padding: 5px;
       width: 305px;
       background: #EEE;
@@ -144,6 +147,17 @@
       height: 200px;
       border : none;
       outline: none;
+    }
+    #editorCode #downloadBtnContainer {
+        margin-top: 8px;
+    }
+    #editorCode #downloadHTML {
+        background: #2ECC71;
+        color: #FFF;
+        padding: 5px;
+        border-radius: 5px;
+
+        cursor: pointer;
     }
   </style>
 </head>
@@ -189,7 +203,12 @@ the inspiration to this, and some handy implementation hints, came.
   <div id="out"></div>
 
 <div id="copy"><img src="./images/copy.png"></div>
-<div id="editorCode"><textarea id="sourceHTML" readonly="readonly"></textarea></div>
+<div id="editorCode">
+    <textarea id="sourceHTML" readonly="readonly"></textarea>
+    <div id="downloadBtnContainer">
+        <a id="downloadHTML" href="#">Download HTML</a>
+    </div>
+</div>
   <script>
     var URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
     navigator.saveBlob = navigator.saveBlob || navigator.msSaveBlob || navigator.mozSaveBlob || navigator.webkitSaveBlob;
@@ -258,11 +277,18 @@ the inspiration to this, and some handy implementation hints, came.
     function save(){
       var code = editor.getValue();
       var blob = new Blob([code], { type: 'text/plain' });
-      saveBlob(blob);
+      saveBlob(blob,"md");
     }
 
-    function saveBlob(blob){
-      var name = "untitled.md";
+    function downloadHTML()
+    {
+        var code = document.getElementById('sourceHTML').value ;
+        var blob = new Blob([code], { type: 'text/html' });
+        saveBlob(blob,"html");
+    }
+
+    function saveBlob(blob,ext){
+      var name = "untitled."+ext;
       if(window.saveAs){
         window.saveAs(blob, name);
       }else if(navigator.saveBlob){
@@ -306,6 +332,11 @@ the inspiration to this, and some handy implementation hints, came.
       update(editor);
       editor.focus();
     }
+
+document.getElementById("downloadHTML").onclick = function ()
+{
+    downloadHTML();
+}
 
 document.getElementById("copy").onclick = function ()
 {
